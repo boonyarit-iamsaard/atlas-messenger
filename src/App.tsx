@@ -1,14 +1,21 @@
 import { FC } from 'react';
 
-import { Container } from '@chakra-ui/react';
+import { Route, Routes } from 'react-router-dom';
 
-import { AuthForm } from './components/forms/auth';
+import { Layout } from './components/layout';
+import EnterPage from './pages/EnterPage';
+import HomePage from './pages/HomePage';
+import NotFoundPage from './pages/NotFoundPage';
 
 const App: FC = () => {
   return (
-    <Container as="section" display="grid" justifyContent="center" maxW="3xl">
-      <AuthForm />
-    </Container>
+    <Routes>
+      <Route path="/atlas-messenger" element={<Layout />}>
+        <Route index element={<HomePage />} />
+        <Route path="/atlas-messenger/enter" element={<EnterPage />} />
+        <Route path="*" element={<NotFoundPage />} />
+      </Route>
+    </Routes>
   );
 };
 
