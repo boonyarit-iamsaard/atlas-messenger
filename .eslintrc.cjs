@@ -20,6 +20,7 @@ module.exports = {
   },
   plugins: ['react', '@typescript-eslint'],
   rules: {
+    'react/no-children-prop': 'off',
     'react/react-in-jsx-scope': 'off',
     'prettier/prettier': 'error',
   },
