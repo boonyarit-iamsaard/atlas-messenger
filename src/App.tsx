@@ -4,12 +4,12 @@ import { Container, Heading, Text, VStack } from '@chakra-ui/react';
 
 const App: FC = () => {
   return (
-    <Container maxW="3xl">
+    <Container as="section" display="grid" placeItems="center" maxW="3xl">
       <VStack spacing={4} py={4}>
-        <Heading>Chat App</Heading>
+        <Heading as="h1">Atlas Messenger</Heading>
         <Text>
-          This is a real-time chat application built with React, TypeScript, and
-          MongoDB Atlas.
+          This is a real-time chat application built with React, TypeScript,
+          Chakra UI, and MongoDB Atlas.
         </Text>
       </VStack>
     </Container>
