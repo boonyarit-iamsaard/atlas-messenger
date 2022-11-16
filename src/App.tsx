@@ -10,9 +10,9 @@ import NotFoundPage from './pages/NotFoundPage';
 const App: FC = () => {
   return (
     <Routes>
-      <Route path="/atlas-messenger" element={<Layout />}>
+      <Route path="/" element={<Layout />}>
         <Route index element={<HomePage />} />
-        <Route path="/atlas-messenger/enter" element={<EnterPage />} />
+        <Route path="/enter" element={<EnterPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Route>
     </Routes>
