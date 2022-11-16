@@ -1,12 +1,24 @@
 import { FC } from 'react';
 
-import { Container, Grid, Text } from '@chakra-ui/react';
+import { Button, Container, Grid } from '@chakra-ui/react';
+import { Link as RouterLink } from 'react-router-dom';
 
 const LayoutHeader: FC = () => {
   return (
     <Grid as="header" alignItems="center">
-      <Container as="nav" display="flex" maxW="3xl">
-        <Text as="b">Atlas Messenger</Text>
+      <Container
+        alignItems="center"
+        as="nav"
+        display="flex"
+        justifyContent="space-between"
+        maxW="3xl"
+      >
+        <Button as={RouterLink} to="/" variant="ghost">
+          Atlas Messenger
+        </Button>
+        <Button as={RouterLink} to="/enter" variant="ghost">
+          Login
+        </Button>
       </Container>
     </Grid>
   );
