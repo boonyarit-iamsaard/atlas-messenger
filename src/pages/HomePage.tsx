@@ -4,7 +4,7 @@ import { Heading, Text, VStack } from '@chakra-ui/react';
 
 const HomePage: FC = () => {
   return (
-    <VStack textAlign="center">
+    <VStack py={4} textAlign="center">
       <Heading as="h1">Welcome to Atlas Messenger</Heading>
       <Text fontSize="sm" color="gray.400">
         A real-time chat application built with React, TypeScript, Chakra UI,
