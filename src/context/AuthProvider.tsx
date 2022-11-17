@@ -26,7 +26,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [currentUser] = useLocalStorage<User | null>('currentUser', null);
 
   useEffect(() => {
-    console.log('currentUser => ', currentUser);
     setUser(currentUser);
   }, [currentUser]);
 
