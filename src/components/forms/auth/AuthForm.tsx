@@ -6,40 +6,105 @@ import {
   FormControl,
   FormLabel,
   Input,
+  useToast,
   VStack,
 } from '@chakra-ui/react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
+import { useAuth } from '../../../hooks/useAuth';
+import { useLocalStorage } from '../../../hooks/useLocalStorage';
 import AuthFormFooter from './AuthFormFooter';
 import AuthFormHeader from './AuthFormHeader';
 
-interface UserCredentials {
-  username: string;
-  password: string;
-}
-
-interface FormData extends UserCredentials {
-  confirmPassword: string;
-  displayName: string;
-}
+type FormData = UserData & { confirmPassword: string };
 
 const defaultFormData: FormData = {
   confirmPassword: '',
   displayName: '',
   password: '',
   username: '',
+  id: '',
 };
 
 const AuthForm: FC = () => {
-  const [formMode, setFormMode] = useState<'login' | 'register'>('login');
   const [formData, setFormData] = useState<FormData>({ ...defaultFormData });
+  const [formMode, setFormMode] = useState<'login' | 'register'>('login');
+  const location = useLocation();
+  const navigate = useNavigate();
+  const toast = useToast();
+  const { setUser } = useAuth();
+  const [storedUsers, setStoredUsers] = useLocalStorage<UserData[]>(
+    'users',
+    []
+  );
+  const [, setCurrentUser] = useLocalStorage<User | null>('currentUser', null);
+
+  const from = location.state?.from?.pathname || '/';
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  console.log('formMode => ', formMode);
-  console.log('formData => ', formData);
+  const handleError = (title: string, description: string) => {
+    toast({
+      title,
+      description,
+      status: 'error',
+      duration: 5000,
+      isClosable: true,
+    });
+  };
+
+  const handleLogin = () => {
+    const { username, password } = formData;
+    const user = storedUsers.find(
+      (user: UserData) =>
+        user.username === username && user.password === password
+    );
+    if (user) {
+      const { id, displayName, username } = user;
+      setCurrentUser({ id, displayName, username });
+      setUser({ id, displayName, username });
+      navigate(from, { replace: true });
+    } else {
+      handleError(
+        'Invalid credentials',
+        'Please check your username and password'
+      );
+    }
+  };
+
+  const handleRegister = () => {
+    const { confirmPassword, displayName, password, username } = formData;
+    if (password !== confirmPassword) {
+      handleError('Passwords do not match', 'Please check your passwords');
+      return;
+    } else {
+      const user = storedUsers.find(
+        (user: UserData) => user.username === username
+      );
+      if (user) {
+        handleError(
+          'Username already exists',
+          'Please choose another username or login'
+        );
+        return;
+      } else {
+        const id = Math.random().toString();
+        const newUser: UserData = {
+          displayName,
+          id,
+          password,
+          username,
+        };
+        setStoredUsers([...storedUsers, newUser]);
+        setCurrentUser({ id, displayName, username });
+        setUser({ id, displayName, username });
+        navigate('/', { replace: true });
+      }
+    }
+  };
 
   return (
     <VStack spacing={4} py={4} maxW="lg" w="full">
@@ -53,6 +118,7 @@ const AuthForm: FC = () => {
             onChange={handleChange}
             type="text"
             value={formData.username}
+            required
           />
         </FormControl>
         <FormControl>
@@ -63,6 +129,7 @@ const AuthForm: FC = () => {
             onChange={handleChange}
             type="password"
             value={formData.password}
+            required
           />
         </FormControl>
         {formMode === 'register' && (
@@ -75,6 +142,7 @@ const AuthForm: FC = () => {
                 onChange={handleChange}
                 type="password"
                 value={formData.confirmPassword}
+                required
               />
             </FormControl>
             <FormControl>
@@ -85,6 +153,7 @@ const AuthForm: FC = () => {
                 onChange={handleChange}
                 type="text"
                 value={formData.displayName}
+                required
               />
             </FormControl>
           </>
@@ -93,6 +162,7 @@ const AuthForm: FC = () => {
           colorScheme={formMode === 'login' ? 'teal' : 'blue'}
           type="submit"
           w="full"
+          onClick={formMode === 'login' ? handleLogin : handleRegister}
         >
           {formMode === 'login' ? 'Login' : 'Register'}
         </Button>

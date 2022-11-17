@@ -1,9 +1,20 @@
 import { FC } from 'react';
 
-import { Button, Container, Grid } from '@chakra-ui/react';
+import { Button, Container, Grid, HStack } from '@chakra-ui/react';
 import { Link as RouterLink } from 'react-router-dom';
 
+import { useAuth } from '../../hooks/useAuth';
+import { useLocalStorage } from '../../hooks/useLocalStorage';
+
 const LayoutHeader: FC = () => {
+  const { user, setUser } = useAuth();
+  const [, setCurrentUser] = useLocalStorage<User | null>('currentUser', null);
+
+  const handleLogout = () => {
+    setCurrentUser(null);
+    setUser(null);
+  };
+
   return (
     <Grid as="header" alignItems="center">
       <Container
@@ -16,9 +27,16 @@ const LayoutHeader: FC = () => {
         <Button as={RouterLink} to="/" variant="ghost">
           Atlas Messenger
         </Button>
-        <Button as={RouterLink} to="/enter" variant="ghost">
-          Login
-        </Button>
+        {user && (
+          <HStack spacing={2}>
+            <Button as={RouterLink} to="/chat" variant="ghost">
+              Chat
+            </Button>
+            <Button onClick={handleLogout} variant="ghost">
+              Logout
+            </Button>
+          </HStack>
+        )}
       </Container>
     </Grid>
   );
