@@ -9,7 +9,7 @@ import App from './App';
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <ChakraProvider>
-      <BrowserRouter basename="/atlas-messenger">
+      <BrowserRouter basename="/atlas-messenger/">
         <App />
       </BrowserRouter>
     </ChakraProvider>
