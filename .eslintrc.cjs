@@ -1,0 +1,27 @@
+module.exports = {
+  root: true,
+  env: {
+    amd: true,
+    browser: true,
+    node: true,
+  },
+  parser: '@typescript-eslint/parser',
+  parserOptions: {
+    ecmaVersion: 'latest',
+    sourceType: 'module',
+    ecmaFeatures: {
+      jsx: true,
+    },
+  },
+  extends: [
+    'next/core-web-vitals',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:prettier/recommended',
+  ],
+  globals: {
+    React: 'readonly',
+  },
+  rules: {
+    'prettier/prettier': 'error',
+  },
+};
